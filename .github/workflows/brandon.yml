@@ -61,7 +61,11 @@ jobs:
           ls ${{ github.workspace }}/artifact
 
     # Step 10 Push package to GitHub Registry
-    - name: Push package to GitHub registry
-      run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --source github --skip-duplicate
+    - name: Publish NuGet
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        # Filepath of the project to be packaged, relative to root of repository
+        PROJECT_FILE_PATH: ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
+        NUGET_KEY: ${{secrets.BR_NGT_KEY}}
       
    
