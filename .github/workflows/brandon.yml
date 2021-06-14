@@ -49,15 +49,9 @@ jobs:
         path: ${{ github.workspace }}/artifact
         
     # Step 8 pack the common logic library
-    - name: Pack AnimalAdoption.Common.Logic
+    - name: Package AnimalAdoption.Common.Logic
       run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
-      
-    # Step 9 push the common logic library to Nuget Repo
-    - name: Publish to NuGet
-      uses: brandedoutcast/publish-nuget@v2
-      with:
-        PROJECT_FILE_PATH: ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
-        VERSION_REGEX: '^\s*<Version>(.*)<\/Version>\s*$'
-        TAG_FORMAT: '*'
-        NUGET_KEY: ${{secrets.BR_NGT_KEY}}
     
+    - name: Publish to NuGet
+      run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --skip-duplicate
+      
