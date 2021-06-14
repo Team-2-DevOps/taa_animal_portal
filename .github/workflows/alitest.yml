@@ -35,7 +35,7 @@ jobs:
       
     # Step five
     - name: Test
-      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
+      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration release
       
     # Step six publish to "artifact" folder
     - name: publish
