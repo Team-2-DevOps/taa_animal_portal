@@ -36,3 +36,12 @@ jobs:
     # Step five
     - name: Test
       run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
+
+    # Step Six
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        # Artifact name
+        name: TAA Web Portal
+        path: ${{ github.workspace }}/artifact
+ 
