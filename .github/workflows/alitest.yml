@@ -31,7 +31,7 @@ jobs:
       
     # Step four
     - name: Build
-      run: dotnet build --no-restore --configuration na
+      run: dotnet build --no-restore --configuration release
       
     # Step five
     - name: Test
@@ -39,7 +39,7 @@ jobs:
       
     # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration na
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration release
       
     # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: Upload a Build Artifact
