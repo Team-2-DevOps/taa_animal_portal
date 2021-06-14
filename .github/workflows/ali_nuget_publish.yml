@@ -35,11 +35,10 @@ jobs:
       
     # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj -o ${{ github.workspace }}/artifact --configuration Release
+      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/artifact --configuration Release
       
     # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        name: TAA web portal
-        path: ${{ github.workspace }}/artifact
+    - name: List out directory contents
+      run: |
+          echo "Listing the contents of the GitHub workspace directory"
+          ls ${{ github.workspace }}/artifact
