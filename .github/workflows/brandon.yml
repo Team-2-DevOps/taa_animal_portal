@@ -54,7 +54,7 @@ jobs:
       
     # Step 9 push the common logic library to GPR
     - name: Push AnimalAdoption.Common.Logic Library to GPR
-      run: dotnet push ${{ github.workspace }}/AnimalAdoption.Common.Logic//bin//Debug//AnimalAdoption.Common.Logic.1.0.0.nupkg
+      run: dotnet push ${{ github.workspace }}/AnimalAdoption.Common.Logic/bin/Debug/AnimalAdoption.Common.Logic.1.0.0.nupkg
       
         
         
