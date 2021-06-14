@@ -1,0 +1,38 @@
+# This is the name that will show up in the Actions sidebar
+name: thimantha-test-workflow
+
+# These are the events that can trigger the workflow
+on:
+  push:
+    # These are the branches in which events can happen that will trigger the workflow
+    branches: [ master, dev/devitr1 ]
+
+# There can be multiple jobs that make up a pipeline
+jobs:
+  # This is the first (and only job at this stage) and it will show up with the name "build"
+  build:
+    # This is the agent type that the job will run on
+    runs-on: ubuntu-latest
+
+    # These are the steps inside the "build" job
+    steps:
+    # Step one
+    - uses: actions/checkout@v2
+    
+    # Step two
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    
+    # Step three
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    # Step four
+    - name: Build
+      run: dotnet build --no-restore
+      
+    # Step five
+    - name: Test
+      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
