@@ -67,5 +67,6 @@ jobs:
         # Filepath of the project to be packaged, relative to root of repository
         PROJECT_FILE_PATH: ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
         NUGET_KEY: ${{secrets.GITHUB_TOKEN}}
+        NUGET_SOURCE:: https://nuget.pkg.github.com/Team-2-DevOps/index.json
       
    
