@@ -47,4 +47,13 @@ jobs:
       with:
         name: TAA web portal
         path: ${{ github.workspace }}/artifact
+        
+    # Step 8 pack the common logic
+    - name: Pack AnimalAdoption.Common.Logic
+      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
+      
+    
+        
+        
+        
      
