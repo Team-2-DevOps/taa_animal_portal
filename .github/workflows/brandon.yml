@@ -1,5 +1,5 @@
 # This is the name that will show up in the Actions sidebar
-name: TAA Web Portal workflow
+name: brandon workflow
 
 # These are the events that can trigger the workflow
 on:
@@ -32,7 +32,20 @@ jobs:
     # Step four
     - name: Build
       run: dotnet build --no-restore
-      
+        
     # Step five
     - name: Test
-      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
+      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration release
+      
+    # Step six publish to "artifact" folder
+    - name: publish
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration release
+      
+    # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: TAA web portal
+        path: ${{ github.workspace }}/artifact
+     
+
