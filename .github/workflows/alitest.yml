@@ -37,11 +37,7 @@ jobs:
     - name: Test
       run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
       
-    # Step six
-    - name: List out directory contents
-      run: |
-        echo "Listing the contents of the GitHub workspace directory"
-        ls ${{ github.workspace }}
-
-        echo "Recursively listing all contents of the current directory"
-        ls -R
+    # Step six publish
+    - name: publish
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj
+      
