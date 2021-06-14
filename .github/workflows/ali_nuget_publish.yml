@@ -7,6 +7,10 @@ on:
     # These are the branches in which events can happen that will trigger the workflow
     branches: [ alisusanto-smu-patch-1 ]
 
+env:
+    GitHubPackageFeedUrl: https://nuget.pkg.github.com/Team-2-DevOps/index.json
+    LogicProjectPath: ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj
+      
 # There can be multiple jobs that make up a pipeline
 jobs:
   # This is the first (and only job at this stage) and it will show up with the name "build"
@@ -35,10 +39,21 @@ jobs:
       
     # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/artifact --configuration Release
+      run: dotnet pack ${{ env.LogicProjectPath }} --no-build --no-restore -o ${{ github.workspace }}/artifact --configuration Release
       
     # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: List out directory contents
       run: |
           echo "Listing the contents of the GitHub workspace directory"
           ls ${{ github.workspace }}/artifact
+
+    # GitHub automatically creates a GITHUB_TOKEN secret to use in your workflow
+    - name: Setup .NET Core @ Latest
+      uses: actions/setup-dotnet@v1
+      with:
+        source-url: ${{ env.GitHubPackageFeedUrl }}
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
+    - name: Push package to GitHub registry
+      run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --skip-duplicate
