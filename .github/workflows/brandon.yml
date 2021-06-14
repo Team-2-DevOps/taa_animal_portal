@@ -24,7 +24,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        
     # Step three
     - name: Restore dependencies
       run: dotnet restore
@@ -50,8 +52,14 @@ jobs:
         
     # Step 8 pack the common logic library
     - name: Package AnimalAdoption.Common.Logic
-      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
+      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/artifact --configuration release
     
-    - name: Publish to NuGet
+    # Step 9 List out directory contents
+    - name: List out directory contents
+      run: |
+          echo "Listing the contents of the GitHub workspace directory"
+          ls ${{ github.workspace }}/artifact
+
+    # Step 10 Push package to GitHub Registry
+    - name: Push package to GitHub registry
       run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --skip-duplicate
-      
