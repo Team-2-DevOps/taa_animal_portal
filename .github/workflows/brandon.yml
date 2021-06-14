@@ -24,6 +24,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+        source-url: https://nuget.pkg.github.com/Team-2-DevOps/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         
@@ -33,15 +34,15 @@ jobs:
       
     # Step four
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
         
     # Step five
     - name: Test
-      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
+      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration Release
       
     # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration release
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration Release
       
     # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: Upload a Build Artifact
@@ -52,21 +53,17 @@ jobs:
         
     # Step 8 pack the common logic library
     - name: Package AnimalAdoption.Common.Logic
-      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/artifact --configuration release
+      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/nuget --configuration Release
     
     # Step 9 List out directory contents
     - name: List out directory contents
       run: |
-          echo "Listing the contents of the GitHub workspace directory"
+          echo "Listing the contents of the artifact directory"
           ls ${{ github.workspace }}/artifact
+          
+          echo "Listing the contents of the nuget directory"
+          ls ${{ github.workspace }}/nuget
 
     # Step 10 Push package to GitHub Registry
-    - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
-        NUGET_KEY: ${{secrets.GITHUB_TOKEN}}
-        NUGET_SOURCE:: https://nuget.pkg.github.com/Team-2-DevOps/index.json
-      
-   
+    - name: Push NuGet package
+      run: dotnet nuget push ${{ github.workspace }}/nuget/*.nupkg --skip-duplicate
