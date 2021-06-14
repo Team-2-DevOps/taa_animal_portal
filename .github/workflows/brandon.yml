@@ -1,11 +1,11 @@
 # This is the name that will show up in the Actions sidebar
-name: brandon workflow
+name: brandon-patch-1 workflow
 
 # These are the events that can trigger the workflow
 on:
   push:
     # These are the branches in which events can happen that will trigger the workflow
-    branches: [ master, dev/devitr1 ]
+    branches: [ master, brandon-patch-1 ]
 
 # There can be multiple jobs that make up a pipeline
 jobs:
