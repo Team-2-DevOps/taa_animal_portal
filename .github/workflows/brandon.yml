@@ -62,4 +62,6 @@ jobs:
 
     # Step 10 Push package to GitHub Registry
     - name: Push package to GitHub registry
-      run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --skip-duplicate
+      run: dotnet nuget push ${{ github.workspace }}/artifact/*.nupkg --source github --skip-duplicate
+      
+   
