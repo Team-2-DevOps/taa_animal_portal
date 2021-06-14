@@ -54,7 +54,7 @@ jobs:
       
     # Step 9 push the common logic library to Nuget Repo
     - name: Publish to NuGet
-      uses: brandedoutcast/publish-nuget@v2.5.5
+      uses: brandedoutcast/publish-nuget@v2
       with:
         PROJECT_FILE_PATH: ${{ github.workspace }}/AnimalAdoption.Common.Logic//AnimalAdoption.Common.Logic.csproj
         VERSION_REGEX: '^\s*<Version>(.*)<\/Version>\s*$'
