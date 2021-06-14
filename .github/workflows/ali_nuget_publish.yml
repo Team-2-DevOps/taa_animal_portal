@@ -35,7 +35,7 @@ jobs:
       
     # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj -o ${{ github.workspace }}/artifact --configuration Release
+      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj -o ${{ github.workspace }}/artifact --configuration Release
       
     # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: Upload a Build Artifact
