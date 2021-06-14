@@ -41,3 +41,8 @@ jobs:
     - name: publish
       run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ./artifact
       
+    # Step 7 list out content of publish
+    - name: List out directory contents
+      run: |
+          echo "Listing the contents of the GitHub workspace directory"
+          ls ${{ github.workspace }}/artifact
