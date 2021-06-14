@@ -31,17 +31,17 @@ jobs:
       
     # Step four
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration na
       
     # Step five
     - name: Test
       run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
       
-    # Step six publish
+    # Step six publish to "artifact" folder
     - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ./artifact
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration na
       
-    # Step 7 list out content of publish
+    # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.3
       with:
