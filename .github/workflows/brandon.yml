@@ -1,5 +1,5 @@
 # This is the name that will show up in the Actions sidebar
-name: TAA Web Portal workflow
+name: brandon workflow
 
 # These are the events that can trigger the workflow
 on:
