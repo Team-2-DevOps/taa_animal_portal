@@ -100,14 +100,14 @@ jobs:
       with:
         subscriptionId: "cfe96ac1-4cd0-40ad-9751-b18802bf8822"
         resourceGroupName: "DevOpsGitHub-2021-06-14-team-02-prod"
-        template: ${{ github.workspace }}/armtemplate/deploy.json
+        template: "${{ github.workspace }}/armtemplate/deploy.json'
         resourceLocation: "southeastasia"
         tenantGuid: "ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039"
         appServicePlanName: "app_service_plan_prod_team2_dog"
         keyVaultName: "keyvaultprodteam2dog"
         webAppName: "webappteam2dog"
         resourceGroupServicePrincipalManagedApplicationObjectId: "47aaca33-f99f-4975-8442-980147090c40"
-        
+       
       # output containerName variable from template
     - run: echo ${{ steps.deploy.outputs.containerName }}
 
