@@ -97,7 +97,7 @@ jobs:
       with:
         app-name: ${{ env.AZURE_TEST_WEBAPP_NAME }}
         mask-inputs: false
-        app-settings-json: '[{ "name": "GlobalPassword", "value": "${{ ${{ steps.TAASEADEVKEYVAULT.outputs.GlobalPassword }}  }}", "slotSetting": false }]'
+        app-settings-json: '[{ "name": "GlobalPassword", "value": "${{ steps.TAASEADEVKEYVAULT.outputs.GlobalPassword }}", "slotSetting": false }]'
       id: settings
     - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
     - run: |
