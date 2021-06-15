@@ -73,7 +73,7 @@ jobs:
         package: ${{ github.workspace }}/azure_artifact
      
   updateconfig:
-    needs: [ release ]
+    needs: [ build, release ]
     
     steps:
     
