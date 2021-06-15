@@ -1,5 +1,5 @@
 # This is the name that will show up in the Actions sidebar
-name: Create Resource ARM Deploy
+name: Create resource ARM Ali
 
 # These are the events that can trigger the workflow
 on:
@@ -13,50 +13,40 @@ env:
 # There can be multiple jobs that make up a pipeline
 jobs:
   # This is the first (and only job at this stage) and it will show up with the name "build"
-  getarmtemplate:
-        
-    # Step 8 upload arm template artifect
+  build:
+    # This is the agent type that the job will run on
+    runs-on: ubuntu-latest
+
+    # These are the steps inside the "build" job
+    steps:
+    # Step one
+    - uses: actions/checkout@v2
+    
+    # Step two
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    
+    # Step three
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    # Step four
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      
+    # Step five
+    - name: Test
+      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration Release
+      
+    # Step six publish to "artifact" folder
+    - name: publish
+      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration Release
+      
+    # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.3
       with:
-        name: Arm Template
-        path: ${{ github.workspace }}/deploy.json
-
- 
- createresource:
-    needs: [ release2Dev ]
-    
-    runs-on: ubuntu-latest
-    
-    steps:
-    
-    # Download Deploy.json
-    - uses: actions/download-artifact@v2
-      with:
-        name: Arm Template
-        path: ${{ github.workspace }}/armtemplate
-    
-    - name: Azure Login
-      uses: Azure/login@v1
-      with:
-        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-        creds: ${{ secrets.PROD_RESOURCEGRP_SECRET }}
-    
-    - name: Run ARM deploy
-      uses: azure/arm-deploy@v1
-      with:
-        subscriptionId: "cfe96ac1-4cd0-40ad-9751-b18802bf8822"
-        resourceGroupName: "DevOpsGitHub-2021-06-14-team-02-prod"
-        template: ${{ github.workspace }}/armtemplate/deploy.json
-        resourceLocation="southeastasia"
-        tenantGuid="ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039"
-        appServicePlanName="app_service_plan_prod_team2_dog"
-        keyVaultName="keyvaultprodteam2dog"
-        webAppName="webappteam2dog"
-        resourceGroupServicePrincipalManagedApplicationObjectId="47aaca33-f99f-4975-8442-980147090c40"
-        
-      # output containerName variable from template
-    - run: echo ${{ steps.deploy.outputs.containerName }}
-
-    - run: |
-        az logout
+        name: TAA web portal
+        path: ${{ github.workspace }}/artifact
