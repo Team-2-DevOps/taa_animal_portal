@@ -75,6 +75,8 @@ jobs:
   updateconfig:
     needs: [ build, release ]
     
+    runs-on: ubuntu-latest
+    
     steps:
     
     - name: Azure Login
