@@ -50,12 +50,19 @@ jobs:
       with:
         name: TAA web portal
         path: ${{ github.workspace }}/artifact
-        
-    # Step 8 pack the common logic library
+  
+    # Step 8 upload arm template artifect
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: Arm Template
+        path: ${{ github.workspace }}/deploy.json
+  
+    # Step 9 pack the common logic library
     - name: Package AnimalAdoption.Common.Logic
       run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/nuget --configuration Release
     
-    # Step 9 List out directory contents
+    # Step 10 List out directory contents
     - name: List out directory contents
       run: |
           echo "Listing the contents of the artifact directory"
@@ -64,6 +71,45 @@ jobs:
           echo "Listing the contents of the nuget directory"
           ls ${{ github.workspace }}/nuget
 
-    # Step 10 Push package to GitHub Registry
+    # Step 11 Push package to GitHub Registry
     - name: Push NuGet package
       run: dotnet nuget push ${{ github.workspace }}/nuget/*.nupkg --skip-duplicate
+
+  DeployAzureResource2Prod:
+  
+    needs: [ release2Dev ]
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+    # Download Deploy.json
+    - uses: actions/download-artifact@v2
+      with:
+        name: Arm Template
+        path: ${{ github.workspace }}/armtemplate
+    
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+        creds: ${{ secrets.PROD_RESOURCEGRP_SECRET }}
+    
+    - name: Run ARM deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: "cfe96ac1-4cd0-40ad-9751-b18802bf8822"
+        resourceGroupName: "DevOpsGitHub-2021-06-14-team-02-prod"
+        template: ${{ github.workspace }}/armtemplate/deploy.json
+        resourceLocation="southeastasia"
+        tenantGuid="ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039"
+        appServicePlanName="app_service_plan_prod_team2_dog"
+        keyVaultName="keyvaultprodteam2dog"
+        webAppName="webappteam2dog"
+        resourceGroupServicePrincipalManagedApplicationObjectId="47aaca33-f99f-4975-8442-980147090c40"
+        
+      # output containerName variable from template
+    - run: echo ${{ steps.deploy.outputs.containerName }}
+
+    - run: |
+        az logout
