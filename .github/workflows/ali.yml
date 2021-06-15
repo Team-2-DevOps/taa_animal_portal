@@ -22,38 +22,6 @@ jobs:
     # Step one
     - uses: actions/checkout@v2
     
-    # Step two
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-        source-url: https://nuget.pkg.github.com/Team-2-DevOps/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        
-    # Step three
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    # Step four
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-        
-    # Step five
-    - name: Test
-      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration Release
-      
-    # Step six publish to "artifact" folder
-    - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration Release
-      
-    # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        name: TAA web portal
-        path: ${{ github.workspace }}/artifact
-  
     # Step 8 upload arm template artifect
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.3
@@ -61,22 +29,6 @@ jobs:
         name: Arm Template
         path: ${{ github.workspace }}/deploy.json
   
-    # Step 9 pack the common logic library
-    - name: Package AnimalAdoption.Common.Logic
-      run: dotnet pack ${{ github.workspace }}/AnimalAdoption.Common.Logic/AnimalAdoption.Common.Logic.csproj --no-build --no-restore -o ${{ github.workspace }}/nuget --configuration Release
-    
-    # Step 10 List out directory contents
-    - name: List out directory contents
-      run: |
-          echo "Listing the contents of the artifact directory"
-          ls ${{ github.workspace }}/artifact
-          
-          echo "Listing the contents of the nuget directory"
-          ls ${{ github.workspace }}/nuget
-    # Step 11 Push package to GitHub Registry
-    - name: Push NuGet package
-      run: dotnet nuget push ${{ github.workspace }}/nuget/*.nupkg --skip-duplicate
-        
   createresource:
     needs: [ getarmtemplate ]
     
