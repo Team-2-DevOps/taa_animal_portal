@@ -13,43 +13,7 @@ env:
 # There can be multiple jobs that make up a pipeline
 jobs:
   # This is the first (and only job at this stage) and it will show up with the name "build"
-  build:
-    # This is the agent type that the job will run on
-    runs-on: ubuntu-latest
-
-    # These are the steps inside the "build" job
-    steps:
-    # Step one
-    - uses: actions/checkout@v2
-    
-    # Step two
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-    
-    # Step three
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    # Step four
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-      
-    # Step five
-    - name: Test
-      run: dotnet test ${{ github.workspace }}/AnimalAdoption.Web.Portal.UnitTests/AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal --configuration Release
-      
-    # Step six publish to "artifact" folder
-    - name: publish
-      run: dotnet publish ${{ github.workspace }}/AnimalAdoption.Web.Portal/AnimalAdoption.Web.Portal.csproj -o ${{ github.workspace }}/artifact --configuration Release
-      
-    # Step 7 take content of "artifact" folder and zip it up. zip file can be found in end of CI
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        name: TAA web portal
-        path: ${{ github.workspace }}/artifact
+  getarmtemplate:
         
     # Step 8 upload arm template artifect
     - name: Upload a Build Artifact
@@ -58,28 +22,7 @@ jobs:
         name: Arm Template
         path: ${{ github.workspace }}/deploy.json
 
-  release2Dev:
-    needs: [ build ]
-    
-    runs-on: ubuntu-latest
-
-    steps:
-    
-    # NOTE: name must be the same as line 48
-    - uses: actions/download-artifact@v2
-      with:
-        name: TAA web portal
-        path: ${{ github.workspace }}/azure_artifact
-      
-      # Deploy to Azure Web apps
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_TEST_WEBAPP_NAME }} # Replace with your app name
-        publish-profile: ${{ secrets.AZURE_TEST_WEBAPP_PUBLISH_PROFILE  }} # Define secret variable in repository settings as per action documentation
-        package: ${{ github.workspace }}/azure_artifact
-     
-  DeployAzureResource2Prod:
+  createresource:
     needs: [ release2Dev ]
     
     runs-on: ubuntu-latest
