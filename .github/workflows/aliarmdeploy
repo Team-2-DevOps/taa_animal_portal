@@ -1,11 +1,12 @@
 # This is the name that will show up in the Actions sidebar
-name: Ali Test ARM Deploy
+name: Ali Test ARM Deploy 1
 
 # These are the events that can trigger the workflow
 on:
   push:
     # These are the branches in which events can happen that will trigger the workflow
     branches: [ alisusanto-smu-patch-1 ]
+  workflow_dispatch:
 
 env:
   AZURE_TEST_WEBAPP_NAME: teams2-taa
