@@ -108,7 +108,7 @@ jobs:
           tenantGuid=ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039
           appServicePlanName=app_service_plan_prod_team2_dog
           keyVaultName=keyvaultprodteam2dog
-          webAppName=webappteam2dog
+          webAppName=webappprodteam2dog
           resourceGroupServicePrincipalManagedApplicationObjectId=47aaca33-f99f-4975-8442-980147090c40
        
       # output containerName variable from template
