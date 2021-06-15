@@ -72,7 +72,7 @@ jobs:
         publish-profile: ${{ secrets.AZURE_TEST_WEBAPP_PUBLISH_PROFILE  }} # Define secret variable in repository settings as per action documentation
         package: ${{ github.workspace }}/azure_artifact
      
-  updateconfig:
+  armupdate:
     needs: [ build, release ]
     
     runs-on: ubuntu-latest
@@ -85,20 +85,15 @@ jobs:
         # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
         creds: ${{ secrets.AZURE_CREDENTIALS  }}
     
-    - name: Get value from vault
-      uses: Azure/get-keyvault-secrets@v1
+    - name: Run ARM deploy
+      uses: azure/arm-deploy@v1
       with:
-        keyvault: "TAASEADEVKEYVAULT"
-        secrets: 'GlobalPassword'  # comma separated list of secret keys that need to be fetched from the Key Vault 
-      id: TAASEADEVKEYVAULT    
-        
-    - name: Publish app setting to azure
-      uses: azure/appservice-settings@v1
-      with:
-        app-name: ${{ env.AZURE_TEST_WEBAPP_NAME }}
-        mask-inputs: false
-        app-settings-json: '[{ "name": "GlobalPassword", "value": "${{ steps.TAASEADEVKEYVAULT.outputs.GlobalPassword }}", "slotSetting": false }]'
-      id: settings
-    - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+        subscriptionId: "cfe96ac1-4cd0-40ad-9751-b18802bf8822"
+        resourceGroupName: "DevOpsGitHub-2021-06-14-team-02-prod"
+        template: ${{ github.workspace }}/deploy.json
+
+      # output containerName variable from template
+    - run: echo ${{ steps.deploy.outputs.containerName }}
+
     - run: |
         az logout
