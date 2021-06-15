@@ -77,7 +77,7 @@ jobs:
 
   DeployAzureResource2Prod:
   
-    needs: [ release2Dev ]
+    needs: [ build ]
     
     runs-on: ubuntu-latest
     
