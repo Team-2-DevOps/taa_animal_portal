@@ -5,7 +5,7 @@ name: brandon-patch-1 workflow
 on:
   push:
     # These are the branches in which events can happen that will trigger the workflow
-    branches: [ master, brandon-patch-1 ]
+    branches: [ brandon-patch-1 ]
 
 # There can be multiple jobs that make up a pipeline
 jobs:
